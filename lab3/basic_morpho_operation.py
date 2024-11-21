@@ -41,12 +41,15 @@ for i in x:
     cv.imshow("Closing Image", img_closing)
     cv.waitKey(0)
 
-    img_hitormiss = cv.morphologyEx(i, cv.MORPH_HITMISS,kernel)
-    cv.imshow("hit or miss Image", img_hitormiss)
-    cv.waitKey(0)
-
     boundary_img = cv.subtract(i, img_erode)
     cv.imshow("boundary Image", boundary_img)
+    cv.waitKey(0)
+
+    i = cv.cvtColor(i, cv.COLOR_BGR2GRAY)
+
+    _, i = cv.threshold(i, 127, 255, cv.THRESH_BINARY)
+    img_hitormiss = cv.morphologyEx(i, cv.MORPH_HITMISS,kernel)
+    cv.imshow("hit or miss Image", img_hitormiss)
     cv.waitKey(0)
 
 
