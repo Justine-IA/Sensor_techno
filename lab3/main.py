@@ -29,6 +29,11 @@ for i in x:
     cv.imshow("Eroded Image", img_erode)
     cv.waitKey(0)
 
+    boundary_img = cv.subtract(i, img_erode)
+    cv.imshow("boundary Image", boundary_img)
+    cv.waitKey(0)
+
+
     img_dilate = cv.dilate(i, kernel)
     cv.imshow("Dilated Image", img_dilate)
     cv.waitKey(0)
@@ -40,5 +45,8 @@ for i in x:
     img_closing = cv.morphologyEx(i, cv.MORPH_CLOSE, kernel)
     cv.imshow("Closing Image", img_closing)
     cv.waitKey(0)
+
+
+
 
 cv.destroyAllWindows()
