@@ -4,17 +4,9 @@ import numpy as np
 img1 = cv.imread(cv.samples.findFile("img1.tif"))
 if img1 is None:
     sys.exit("Could not read the image.")
-img2 = cv.imread(cv.samples.findFile("img2.tif"))
-if img2 is None:
-    sys.exit("Could not read the image.")
-
 
 img1=cv.imread("img1.tif")
 cv.imshow("img1", img1)
-cv.waitKey(0)
-
-img2=cv.imread("img2.tif")
-cv.imshow("img2", img2)
 cv.waitKey(0)
 
 print(img1.shape)
@@ -47,7 +39,6 @@ for i in x:
 
     i = cv.cvtColor(i, cv.COLOR_BGR2GRAY)
 
-    _, i = cv.threshold(i, 127, 255, cv.THRESH_BINARY)
     img_hitormiss = cv.morphologyEx(i, cv.MORPH_HITMISS,kernel)
     cv.imshow("hit or miss Image", img_hitormiss)
     cv.waitKey(0)
