@@ -22,17 +22,12 @@ print(img1.shape)
 
 ksize = (5, 5)
 kernel = cv.getStructuringElement(cv.MORPH_CROSS,ksize)
-x = [img1, img2]
+x = [img1]
 
 for i in x:
     img_erode = cv.erode(i, kernel)
     cv.imshow("Eroded Image", img_erode)
     cv.waitKey(0)
-
-    boundary_img = cv.subtract(i, img_erode)
-    cv.imshow("boundary Image", boundary_img)
-    cv.waitKey(0)
-
 
     img_dilate = cv.dilate(i, kernel)
     cv.imshow("Dilated Image", img_dilate)
@@ -46,7 +41,13 @@ for i in x:
     cv.imshow("Closing Image", img_closing)
     cv.waitKey(0)
 
+    img_hitormiss = cv.morphologyEx(i, cv.MORPH_HITMISS,kernel)
+    cv.imshow("hit or miss Image", img_hitormiss)
+    cv.waitKey(0)
 
+    boundary_img = cv.subtract(i, img_erode)
+    cv.imshow("boundary Image", boundary_img)
+    cv.waitKey(0)
 
 
 cv.destroyAllWindows()
