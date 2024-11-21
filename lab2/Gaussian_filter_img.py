@@ -18,7 +18,7 @@ cv.waitKey(0)
 
 gaussian_blur_range = [(5,5)]
 for i in gaussian_blur_range:
-    Blur_Gauss_Img = cv.GaussianBlur(Gauss_Img,i,0)
+    Blur_Gauss_Img = cv.GaussianBlur(Gauss_Img,i,1)
     cv.imshow(f"gaussian Gaussian Blur {i}", Blur_Gauss_Img)
     Blur_PepperSalt_Img = cv.GaussianBlur(PepperSalt_Img,i,0)
     cv.imshow(f"Pepper-Salt gaussian Blur {i}", Blur_PepperSalt_Img)
