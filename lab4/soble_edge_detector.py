@@ -2,9 +2,9 @@ import cv2 as cv
 import sys
 import os
 import numpy as np 
-image_path = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\car.png"
-image_path1 = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\coins.png"
-image_path2 = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\dog.png"
+image_path = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\icons01.png"
+image_path1 = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\piece03.png"
+image_path2 = r"H:\Image_analy\Sensor_techno\lab4\lab4_pics\meltPool.tif"
 
 if not os.path.exists(image_path):
     
@@ -27,6 +27,8 @@ def resize_image(image, scale_percent):
     return cv.resize(image, dimensions, interpolation=cv.INTER_AREA)
 
 x[0] = resize_image(x[0],30)
+x[1] = resize_image(x[1],30)
+x[2] = resize_image(x[2],50)
 
 for idx, img in enumerate(x):
     window_name = f"Resized Image {idx + 1}"
