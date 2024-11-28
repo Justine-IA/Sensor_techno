@@ -19,9 +19,6 @@ img = resize_image(img, 50)
 cv.imshow("Original Image", img)
 cv.waitKey(0)
 
-
-
-
 ret, img_tresh = cv.threshold(img,127,255,cv.THRESH_BINARY)
 cv.imshow("tresh img", img_tresh)
 cv.waitKey(0)
@@ -54,7 +51,6 @@ bottommost = np.max(rows)
 width = rightmost - leftmost
 height = bottommost - topmost
 
-# Compute centroid
 centroid_row = np.mean(rows)
 centroid_col = np.mean(cols)
 
