@@ -9,7 +9,7 @@ if not os.path.exists(image_path):
     
     sys.exit(f"Error: File not found at {image_path}")
 
-img = cv.imread(image_path)
+img = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
 
 def img_show(img):
     cv.imshow("original", img )
@@ -25,40 +25,42 @@ def resize_image(image, scale_percent):
 img = resize_image(img, 10)
 
 
-different_imread= []
+different_tresh= []
 def diff_imread(img):
-    ret, tresh = cv.threshold(img,50,255,cv.THRESH_BINARY)
-    different_imread.append(tresh)
-    ret, tresh = cv.threshold(img,50,255,cv.THRESH_BINARY_INV)
-    different_imread.append(tresh)
-    ret, tresh = cv.threshold(img,50,255,cv.THRESH_TRUNC)
-    different_imread.append(tresh)
-    ret, tresh = cv.threshold(img,50,255,cv.THRESH_TOZERO)
-    different_imread.append(tresh)
-    ret, tresh = cv.threshold(img,50,255,cv.THRESH_TOZERO_INV)
-    different_imread.append(tresh)
+    ret, tresh = cv.threshold(img,70,100,cv.THRESH_BINARY)
+    different_tresh.append(tresh)
+    ret, tresh = cv.threshold(img,70,100,cv.THRESH_BINARY_INV)
+    different_tresh.append(tresh)
+    ret, tresh = cv.threshold(img,100,255,cv.THRESH_TRUNC)
+    different_tresh.append(tresh)
+    ret, tresh = cv.threshold(img,100,255,cv.THRESH_TOZERO)
+    different_tresh.append(tresh)
+    ret, tresh = cv.threshold(img,100,255,cv.THRESH_TOZERO_INV)
+    different_tresh.append(tresh)
 
 diff_imread(img)
 
 
 
-for img in different_imread:
+for img in different_tresh:
     #img = resize_image(img, 50)
     img_show(img)
 
+stacked_vertically = np.vstack(different_tresh)
 
+stacked_horizontally = np.hstack(different_tresh)
 
+cv.imshow('Vertical Stack', stacked_vertically)
 
+cv.imshow('Horizontal Stack', stacked_horizontally)
 
-
-
-
-
-
-
+cv.waitKey(0)
+cv.destroyAllWindows()
 
 ###########ANSWER#########
-#
+#after stacking vertically or horizontally, 
+# the function imshow reads and display the picture horizontally,
+# the 5 picture in a row, same for vertically but in vertical 
 #
 #
 #
