@@ -3,7 +3,7 @@ import numpy as np
 import os
 import sys
 
-image_path = r"H:\Image_analy\Sensor_techno\machine_vision_lab1\Images_Lab_1\Original.png"
+image_path = r"C:\Users\Jean\Documents\Suede\Sensor_techno\machine_vision_lab1\Images_Lab_1\original.png"
 
 if not os.path.exists(image_path):
     
