@@ -34,7 +34,17 @@ kernel =cv.getStructuringElement(cv.MORPH_CROSS,ksize)
 sift = cv.SIFT_create()
 
 for idx, img in enumerate(class_A):
-    
+
+    # img_erode = cv.erode(img, kernel)
+
+    # img_opening = cv.morphologyEx(img, cv.MORPH_OPEN, kernel)
+
+    # boundary_img = cv.subtract(img_opening, img_erode)
+
+    # blurred = cv.GaussianBlur(boundary_img, ksize,1.4)
+
+    # edges = cv.Canny(blurred, 50 , 150)
+
 
     # Detect keypoints
     keypoints = sift.detect(img, None)
