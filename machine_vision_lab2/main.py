@@ -26,7 +26,6 @@ def main():
             break
 
         canny_contours = MyDetectionMethods.canny_filter(frame)
-        canny_frame = frame.copy()
         # cv2.drawContours(frame, canny_contours, -1, (0, 0, 255), 2)
 
 
@@ -68,14 +67,14 @@ def main():
             for contour in canny_contours:
                 # Get the rotated bounding rectangle for the contour
                 rect = cv2.minAreaRect(contour)
-                box = cv2.boxPoints(rect)  # Get four corner points of the rectangle
-                box = np.int32(box)  # Convert to integer
+                box = cv2.boxPoints(rect)  
+                box = np.int32(box)  
 
-                centroid = (int(rect[0][0]), int(rect[0][1]))  # Get centroid from the rotated rectangle
+                centroid = (int(rect[0][0]), int(rect[0][1]))
                 width = round(rect[1][0] * pixel_to_cm_ratio, 1)
                 height = round(rect[1][1] * pixel_to_cm_ratio, 1)
 
-                if width > 1 and height > 4:
+                if width > 1 and height > 4 and width<12 and height <12:
                     cv2.circle(frame, centroid, radius=2, color=(0, 0, 255), thickness=-1)
                     cv2.drawContours(frame, [box], 0, (255, 0, 0), 2)
 
