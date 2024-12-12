@@ -43,44 +43,21 @@ for idx, img in enumerate(x):
     cv.waitKey(0)
     cv.destroyWindow(window_name)
 
-
 ksize = (5,5)
 kernel = cv.getStructuringElement(cv.MORPH_CROSS, ksize)
 
-img_boundary = []
+img_tresh = []
 for i in x:
-    img_erode = cv.erode(i, kernel)
-    cv.imshow("Eroded Image", img_erode)
+
+    tresh = cv.adaptiveThreshold(
+    i, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2)
+    tresh = cv.bitwise_not(tresh)
+    cv.imshow("tresh", tresh)
     cv.waitKey(0)
 
-    img_opening = cv.morphologyEx(i, cv.MORPH_OPEN, kernel)
-    cv.imshow("Opening Image", img_opening)
+    median_blurr = cv.medianBlur(tresh,3,0)
+    img_tresh.append(median_blurr)
+    cv.imshow("blurr", median_blurr)
     cv.waitKey(0)
-
-    boundary_img = cv.subtract(img_opening, img_erode)
-    cv.imshow("boundary Image", boundary_img)
-    cv.waitKey(0)
-    img_boundary.append(boundary_img)
 
     cv.destroyAllWindows()
-
-kernel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
-kernel_y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
-
-for img in img_boundary:
-    grad_x = cv.Sobel(img, -1, 1, 0, ksize)
-    grad_y = cv.Sobel(img, -1,0,1, ksize)
-    sobel = cv.add(np.abs(grad_x), np.abs(grad_y))
-    cv.imshow("Original Image", img)
-    cv.waitKey(0)
-    cv.imshow("sobel X (Vertical Edges)", grad_x)
-    cv.waitKey(0)
-    cv.imshow("sobel Y (Horizontal Edges)", grad_y)
-    cv.waitKey(0)
-    cv.imshow("sobel Edge Detection", sobel)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-
-cv.destroyAllWindows()
-
-

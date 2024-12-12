@@ -51,16 +51,17 @@ stacked_vertically = np.vstack(different_tresh)
 stacked_horizontally = np.hstack(different_tresh)
 
 cv.imshow('Vertical Stack', stacked_vertically)
+cv.waitKey(0)
 
 cv.imshow('Horizontal Stack', stacked_horizontally)
-
 cv.waitKey(0)
+
 cv.destroyAllWindows()
 
 ###########ANSWER#########
-#after stacking vertically or horizontally, 
-# the function imshow reads and display the picture horizontally,
-# the 5 picture in a row, same for vertically but in vertical 
+#After stacking vertically or horizontally, 
+#the function imshow reads and display the picture horizontally,
+#the 5 picture in a row, same for vertically but in vertical 
 #
 #
 #

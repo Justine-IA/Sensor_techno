@@ -36,51 +36,27 @@ x[0] = resize_image(x[0],30)
 x[1] = resize_image(x[1],30)
 x[2] = resize_image(x[2],50)
 x[3] = resize_image(x[3],30)
-
 for idx, img in enumerate(x):
     window_name = f"Resized Image {idx + 1}"
     cv.imshow(window_name, img)
     cv.waitKey(0)
     cv.destroyWindow(window_name)
 
-
 ksize = (5,5)
 kernel = cv.getStructuringElement(cv.MORPH_CROSS, ksize)
 
-img_boundary = []
+img_tresh = []
 for i in x:
     img_erode = cv.erode(i, kernel)
-    cv.imshow("Eroded Image", img_erode)
-    cv.waitKey(0)
-
     img_opening = cv.morphologyEx(i, cv.MORPH_OPEN, kernel)
-    cv.imshow("Opening Image", img_opening)
-    cv.waitKey(0)
-
     boundary_img = cv.subtract(img_opening, img_erode)
-    cv.imshow("boundary Image", boundary_img)
+
+    _, tresh = cv.threshold(boundary_img,50, 255, cv.THRESH_OTSU)
+    cv.imshow("tresh", tresh)
     cv.waitKey(0)
-    img_boundary.append(boundary_img)
+
+    _, tresh = cv.threshold(i,50, 255, cv.THRESH_OTSU)
+    cv.imshow("tresh", tresh)
+    cv.waitKey(0)
 
     cv.destroyAllWindows()
-
-kernel_x = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
-kernel_y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
-
-for img in img_boundary:
-    grad_x = cv.Sobel(img, -1, 1, 0, ksize)
-    grad_y = cv.Sobel(img, -1,0,1, ksize)
-    sobel = cv.add(np.abs(grad_x), np.abs(grad_y))
-    cv.imshow("Original Image", img)
-    cv.waitKey(0)
-    cv.imshow("sobel X (Vertical Edges)", grad_x)
-    cv.waitKey(0)
-    cv.imshow("sobel Y (Horizontal Edges)", grad_y)
-    cv.waitKey(0)
-    cv.imshow("sobel Edge Detection", sobel)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-
-cv.destroyAllWindows()
-
-
