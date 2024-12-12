@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
 
+
+#creating class with the two filters in it to then analyze and filter images 
+#to isolate object with the main file 
 class MyDetectionMethods:
     @staticmethod
     def canny_filter(image_data, lower_threshold=50, upper_threshold=150):
