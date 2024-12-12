@@ -34,40 +34,4 @@ class MyDetectionMethods:
 
         return contours
 
-    @staticmethod
-    def analyze_camera_feed():
-
-        cap = cv2.VideoCapture(0)  # Open the default camera
-
-        if not cap.isOpened():
-            print("Error: Unable to access the camera.")
-            return
-
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                print("Error: Unable to read frame from the camera.")
-                break
-
-            # Apply Canny filter and binarization to detect contours
-            canny_contours = MyDetectionMethods.canny_filter(frame)
-            binary_contours = MyDetectionMethods.binarization(frame)
-
-            # Draw contours on the original frame
-            canny_frame = frame.copy()
-            binary_frame = frame.copy()
-            cv2.drawContours(canny_frame, canny_contours, -1, (0, 255, 0), 2)  # Green contours
-            cv2.drawContours(binary_frame, binary_contours, -1, (255, 0, 0), 2)  # Blue contours
-
-            # Show the frames
-            cv2.imshow("Original Frame", frame)
-            cv2.imshow("Canny Contours", canny_frame)
-            cv2.imshow("Binary Contours", binary_frame)
-
-            # Exit on pressing 'q'
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
-        cap.release()
-        cv2.destroyAllWindows()
 
