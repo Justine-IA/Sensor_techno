@@ -2,19 +2,19 @@ import cv2 as cv
 import sys
 import os
 import numpy as np 
-image_path = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classA\a1.tiff"
-image_path1 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classA\a2.tiff"
-image_path2 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classA\a3.tiff"
+image_path = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a1.tiff"
+image_path1 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a2.tiff"
+image_path2 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a3.tiff"
 
 if not os.path.exists(image_path):
     
     sys.exit(f"Error: File not found at {image_path}")
 
-img0 = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
-img1 = cv.imread(image_path1, cv.IMREAD_GRAYSCALE)
-img2 = cv.imread(image_path2, cv.IMREAD_GRAYSCALE)
+img0 = cv.imread(image_path)
+img1 = cv.imread(image_path1)
+img2 = cv.imread(image_path2)
 
-class_A =[img0]
+class_A =[img0,img1,img2]
 
 for i in class_A:
     if i is None:
@@ -30,43 +30,84 @@ def resize_image(image, scale_percent):
 ksize = (9,9)
 kernel =cv.getStructuringElement(cv.MORPH_CROSS,ksize)
 
+def canny_filter(image, lower_threshold=50, upper_threshold=150):
+    img_erode = cv.erode(image, kernel)
+
+    img_opening = cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
+
+    boundary_img = cv.subtract(img_opening, img_erode)
+
+    # Apply Gaussian Blur to reduce noise
+    blurred = cv.GaussianBlur(boundary_img, (5, 5), 1.4)
+
+    # Apply Canny edge detection
+    edges = cv.Canny(blurred, lower_threshold, upper_threshold)
+
+    # Find contours
+    contours, _ = cv.findContours(edges, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+
+    return edges, contours
+
 img_tresh = []
 
 for i in class_A:
-    img_erode = cv.erode(i, kernel)
+    edges, contours = canny_filter(i,50,250)
 
-    img_opening = cv.morphologyEx(i, cv.MORPH_OPEN, kernel)
+    output = i.copy()
 
-    boundary_img = cv.subtract(img_opening, img_erode)
-    cv.imshow("boundary Image", boundary_img)
+  
+    for cnt in contours:
+        # Compute Moments
+        M = cv.moments(cnt)
+        if M['m00'] != 0:
+            cx = int(M['m10'] / M['m00'])  # Centroid X
+            cy = int(M['m01'] / M['m00'])  # Centroid Y
+        else:
+            cx, cy = 0, 0
+
+        # Compute various features
+        area = cv.contourArea(cnt)
+        perimeter = cv.arcLength(cnt, True)
+        hull = cv.convexHull(cnt)
+        is_convex = cv.isContourConvex(cnt)
+        x, y, w, h = cv.boundingRect(cnt)
+        rect = cv.minAreaRect(cnt)
+        box = cv.boxPoints(rect)
+        box = np.int0(box)
+        aspect_ratio = float(w) / h
+        equi_diameter = np.sqrt(4 * area / np.pi)
+        leftmost = tuple(cnt[cnt[:, :, 0].argmin()][0])
+        rightmost = tuple(cnt[cnt[:, :, 0].argmax()][0])
+        topmost = tuple(cnt[cnt[:, :, 1].argmin()][0])
+        bottommost = tuple(cnt[cnt[:, :, 1].argmax()][0])
+
+        # Draw contours and bounding boxes
+        cv.drawContours(output, [cnt], -1, (0, 255, 0), 2)  # Contours in green
+
+        # Mark the centroid
+        cv.circle(output, (cx, cy), 5, (255, 255, 255), -1)
+
+        # Print contour features
+        print(f"Contour Features:")
+        print(f" - Area: {area}")
+        print(f" - Perimeter: {perimeter}")
+        print(f" - Aspect Ratio: {aspect_ratio}")
+        print(f" - Equivalent Diameter: {equi_diameter}")
+        print(f" - Centroid: ({cx}, {cy})")
+        print(f" - Bounding Box: x={x}, y={y}, w={w}, h={h}")
+        print(f" - Leftmost Point: {leftmost}")
+        print(f" - Rightmost Point: {rightmost}")
+        print(f" - Topmost Point: {topmost}")
+        print(f" - Bottommost Point: {bottommost}")
+
+    # Show the image with contours and features
+    cv.imshow("Contours and Features", output)
     cv.waitKey(0)
 
-    # blurred_image = cv.GaussianBlur(boundary_img, (5, 5), 0)
-    blurred_image = cv.bilateralFilter(boundary_img, 9, 75, 75)
-
-    # ret, tresh = cv.threshold(blurred_image, 30,255,cv.THRESH_BINARY)
-    tresh = cv.adaptiveThreshold(
-    blurred_image, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2)
-    tresh = cv.bitwise_not(tresh)
-
-    img_tresh.append(tresh)
-    cv.imshow("test",tresh)
+    # Optional: Display the Canny edges
+    cv.imshow("Canny Edges", edges)
     cv.waitKey(0)
 
-    tresh_median = cv.medianBlur(tresh, 9)
-
-
-    close_img = cv.morphologyEx(tresh_median, cv.MORPH_CLOSE, kernel)
-
-    median_opening = cv.medianBlur(close_img,3,0)
-
-    cv.imshow("idk", median_opening)
-    cv.waitKey(0)
-
-    contours, hierarchy = cv.findContours(median_opening, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
-    cv.imshow("gutbrig",hierarchy)
-    cv.waitKey(0)
-    cv.closeAllWindows()
 
 
 
