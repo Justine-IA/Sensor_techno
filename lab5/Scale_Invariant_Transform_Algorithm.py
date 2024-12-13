@@ -2,15 +2,15 @@ import cv2 as cv
 import sys
 import os
 import numpy as np 
-image_path = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classB\b1.tiff"
-image_path1 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classB\b2.tiff"
-image_path2 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classB\b3.tiff"
+image_path = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\testImg.jpg"
+image_path1 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classB\b2.tiff"
+image_path2 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classB\b3.tiff"
 
 if not os.path.exists(image_path):
     
     sys.exit(f"Error: File not found at {image_path}")
 
-img0 = cv.imread(image_path)
+img0 = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
 img1 = cv.imread(image_path1, cv.IMREAD_GRAYSCALE)
 img2 = cv.imread(image_path2, cv.IMREAD_GRAYSCALE)
 
@@ -33,7 +33,7 @@ kernel =cv.getStructuringElement(cv.MORPH_CROSS,ksize)
 # Create SIFT object
 sift = cv.SIFT_create()
 
-for idx, img in enumerate(class_A):
+for img in class_A:
 
     # img_erode = cv.erode(img, kernel)
 
@@ -43,20 +43,18 @@ for idx, img in enumerate(class_A):
 
     # blurred = cv.GaussianBlur(boundary_img, ksize,1.4)
 
-    # edges = cv.Canny(blurred, 50 , 150)
+    # edges = cv.Canny(img, 50 , 150)
 
-
-    # Detect keypoints
-    keypoints = sift.detect(img, None)
+    _, tresh = cv.threshold(img, 30, 230, cv.THRESH_BINARY_INV)    
+    cv.imshow("idk",tresh)
+    cv.waitKey(0)
+    keypoints = sift.detect(tresh, None)# Detect keypoints
 
     # Draw keypoints on the image
     output_img = cv.drawKeypoints(img, keypoints, None, flags=cv.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
     # Display the image with keypoints
-    cv.imshow(f"Keypoints {idx+1}", output_img)
+    cv.imshow(f"Keypoints ", output_img)
     cv.waitKey(0)
-
-    # Save the output image (optional)
-    cv.imwrite(f"sift_keypoints_{idx+1}.png", output_img)
 
 cv.destroyAllWindows()

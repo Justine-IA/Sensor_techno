@@ -2,9 +2,9 @@ import cv2 as cv
 import sys
 import os
 import numpy as np 
-image_path = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a1.tiff"
-image_path1 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a2.tiff"
-image_path2 = r"C:\Users\Jean\Documents\Suede\Sensor_techno\lab5\pics_Lab5\classA\a3.tiff"
+image_path = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\testImg.jpg"
+image_path1 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classA\a2.tiff"
+image_path2 = r"H:\Image_analy\Sensor_techno\lab5\pics_Lab5\classA\a2.tiff"
 
 if not os.path.exists(image_path):
     
@@ -31,14 +31,8 @@ ksize = (9,9)
 kernel =cv.getStructuringElement(cv.MORPH_CROSS,ksize)
 
 def canny_filter(image, lower_threshold=50, upper_threshold=150):
-    img_erode = cv.erode(image, kernel)
-
-    img_opening = cv.morphologyEx(image, cv.MORPH_OPEN, kernel)
-
-    boundary_img = cv.subtract(img_opening, img_erode)
-
     # Apply Gaussian Blur to reduce noise
-    blurred = cv.GaussianBlur(boundary_img, (5, 5), 1.4)
+    blurred = cv.GaussianBlur(image, (5, 5), 1.4)
 
     # Apply Canny edge detection
     edges = cv.Canny(blurred, lower_threshold, upper_threshold)
@@ -73,7 +67,7 @@ for i in class_A:
         x, y, w, h = cv.boundingRect(cnt)
         rect = cv.minAreaRect(cnt)
         box = cv.boxPoints(rect)
-        box = np.int0(box)
+        box = np.int32(box)
         aspect_ratio = float(w) / h
         equi_diameter = np.sqrt(4 * area / np.pi)
         leftmost = tuple(cnt[cnt[:, :, 0].argmin()][0])
@@ -83,12 +77,21 @@ for i in class_A:
 
         # Draw contours and bounding boxes
         cv.drawContours(output, [cnt], -1, (0, 255, 0), 2)  # Contours in green
+        cv.drawContours(output, [box], 0, (0,0,255), 2 )
+        if len(cnt)>5:
+            ellipse = cv.fitEllipse(cnt)
+            cv.ellipse(output, ellipse, (255,0,0),2 )
+        # Show the image with contours and features
+
+
 
         # Mark the centroid
-        cv.circle(output, (cx, cy), 5, (255, 255, 255), -1)
+        cv.circle(output, (cx, cy), 5, (255, 0, 255), -1)
+
 
         # Print contour features
         print(f"Contour Features:")
+        print(f" - convex: {is_convex}")
         print(f" - Area: {area}")
         print(f" - Perimeter: {perimeter}")
         print(f" - Aspect Ratio: {aspect_ratio}")
