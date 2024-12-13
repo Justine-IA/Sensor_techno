@@ -45,7 +45,7 @@ for img in class_A:
 
     # edges = cv.Canny(img, 50 , 150)
 
-    _, tresh = cv.threshold(img, 30, 230, cv.THRESH_BINARY_INV)    
+    _, tresh = cv.threshold(img, 100, 230, cv.THRESH_BINARY_INV)    
     cv.imshow("idk",tresh)
     cv.waitKey(0)
     keypoints = sift.detect(tresh, None)# Detect keypoints
