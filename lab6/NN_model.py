@@ -4,7 +4,6 @@ from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
 
 # Task 2: Load and prepare dataset
-# Using CIFAR-10 as an example dataset
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 
 # Normalize pixel values
