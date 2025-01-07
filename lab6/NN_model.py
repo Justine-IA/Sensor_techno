@@ -3,14 +3,12 @@ import tensorflow as tf
 from tensorflow.keras import datasets, layers, models
 import matplotlib.pyplot as plt
 
-# Task 2: Load and prepare dataset
-# Using CIFAR-10 as an example dataset
+# Using CIFAR-10 as dataset
 (train_images, train_labels), (test_images, test_labels) = datasets.cifar10.load_data()
 
 # Normalize pixel values
 train_images, test_images = train_images / 255.0, test_images / 255.0
 
-# Task 3: Verify the dataset
 # Display the first 25 images from the training set
 class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
 plt.figure(figsize=(10, 10))
@@ -23,7 +21,6 @@ for i in range(25):
     plt.xlabel(class_names[train_labels[i][0]])
 plt.show()
 
-# Task 4: Create the base convolutional network
 model = models.Sequential()
 model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(32, 32, 3)))
 model.add(layers.MaxPooling2D((2, 2)))
@@ -31,7 +28,6 @@ model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
 
-# Task 5: Add dense layers to the model
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation='relu'))
 model.add(layers.Dense(10))  # 10 classes in CIFAR-10 dataset
@@ -39,7 +35,6 @@ model.add(layers.Dense(10))  # 10 classes in CIFAR-10 dataset
 # Display the model architecture
 model.summary()
 
-# Task 6: Compile and train the network
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=['accuracy'])
